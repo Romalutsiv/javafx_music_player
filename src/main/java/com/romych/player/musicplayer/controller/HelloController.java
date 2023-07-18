@@ -2,11 +2,9 @@ package com.romych.player.musicplayer.controller;
 
 import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.media.MediaView;
@@ -15,9 +13,15 @@ import javafx.stage.Stage;
 import javafx.scene.media.Media;
 
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 public class HelloController {
@@ -37,6 +41,8 @@ public class HelloController {
     private Label songCurrent;
     @FXML
     private ProgressBar songProgressBar;
+    @FXML
+    private Slider songSlider;
 
 
     private FileChooser fileChooser;
@@ -52,7 +58,8 @@ public class HelloController {
     private TimerTask task;
     private boolean running;
 
-    private Tooltip progressBarTooltip;
+    private Label[] labels = new Label[3];
+
 
 
 
@@ -67,6 +74,7 @@ public class HelloController {
     }
     @FXML
     protected void dropFile(DragEvent e){
+        pause();
         List<File> files = e.getDragboard().getFiles();
         openFile(files.get(0));
         play();
@@ -88,17 +96,20 @@ public class HelloController {
     }
     @FXML
     protected void openFileFromMenu(){
-        if (running) {
-            cancelTimer();
-            artistName.setText("");
-            songTitle.setText("");
-        }
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters()
                 .addAll(new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
         File selected = fileChooser.showOpenDialog(new Stage());
+        if (running) {
+            pause();
+            cancelTimer();
+            artistName.setText("");
+            songTitle.setText("");
+        }
         openFile(selected);
         play();
+
+
     }
 
     public void openFile(File file){
@@ -106,12 +117,7 @@ public class HelloController {
         media = new Media(file.toURI().toString());
         media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object> c) -> {
             if (c.wasAdded()) {
-                if ("duration".equals(c.getKey())) {
-                    String s = c.getValueAdded().toString().replaceAll("[^\\d.]", "");
-                    double length = Double.parseDouble(s);
-                    songEnd.setText(getTimeString(length));
-
-                } else if ("title".equals(c.getKey())) {
+                if ("title".equals(c.getKey())) {
                     songTitle.setText(c.getValueAdded().toString());
                 }else if ("artist".equals(c.getKey())) {
                     artistName.setText(c.getValueAdded().toString());
@@ -120,6 +126,9 @@ public class HelloController {
         });
         mediaPlayer = new MediaPlayer(media);
         mediaView = new MediaView(mediaPlayer);
+        mediaPlayer.setOnReady(() -> {
+            songEnd.setText(getTimeString(media.getDuration().toMillis()));
+        });
     }
 
     public void beginTimer(){
@@ -130,7 +139,10 @@ public class HelloController {
                 running = true;
                 double current = mediaPlayer.getCurrentTime().toMillis();
                 double end = media.getDuration().toMillis();
-                songProgressBar.setProgress(current/end);
+                songSlider.setMin(0.0);
+                songSlider.setMax(end);
+                songSlider.setValue(current);
+//                songProgressBar.setProgress(current/end);
                 Platform.runLater(() -> {
                     songCurrent.setText(getTimeString(current));
                 });
