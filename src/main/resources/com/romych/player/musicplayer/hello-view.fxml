@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.Cursor?>
+<BorderPane onDragDropped="#dropFile" onDragOver="#handleDragOver" fx:controller="com.romych.player.musicplayer.controller.HelloController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Open" onAction="#openFileFromMenu" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="133.0" prefWidth="800.0" style="-fx-background-color: #413980;" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="songProgressBar" layoutX="100.0" layoutY="14.0" prefHeight="20.0" prefWidth="601.0" progress="0.0" />
+            <Label fx:id="songCurrent" alignment="CENTER" layoutX="31.0" layoutY="15.0" prefHeight="18.0" prefWidth="50.0" text="--:--:--" textFill="WHITE">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="songEnd" alignment="CENTER" layoutX="721.0" layoutY="15.0" prefHeight="18.0" prefWidth="76.0" text="--:--:--" textFill="WHITE">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+             <Label fx:id="songTitle" layoutX="6.0" layoutY="52.0" prefHeight="30.0" prefWidth="221.0"  textFill="WHITE" underline="true">
+                 <font>
+                     <Font name="Arial" size="16.0" />
+                 </font>
+                 <cursor>
+                     <Cursor fx:constant="TEXT" />
+                 </cursor>
+             </Label>
+             <Label fx:id="artistName" layoutX="6.0" layoutY="76.0" prefHeight="30.0" prefWidth="136.0"  textFill="WHITE">
+                 <font>
+                     <Font name="Arial" size="14.0" />
+                 </font>
+                 <cursor>
+                     <Cursor fx:constant="TEXT" />
+                 </cursor>
+             </Label>
+            <Button fx:id="playBtn" onAction="#play"  layoutX="375.0" layoutY="54.0" mnemonicParsing="false"  text="Play" />
+            <Button fx:id="pauseBtn" onAction="#pause"  layoutX="375.0" layoutY="54.0" mnemonicParsing="false"  text="Pause" visible="false" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>
