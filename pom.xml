@@ -43,6 +43,14 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.42.0.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -65,7 +73,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.romych.player.musicplayer/com.romych.player.musicplayer.HelloApplication
+                            <mainClass>com.romych.player.musicplayer/com.romych.player.musicplayer.Application
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
