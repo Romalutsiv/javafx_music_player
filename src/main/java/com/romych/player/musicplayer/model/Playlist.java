@@ -12,9 +12,18 @@ public class Playlist {
     private LocalDate creatingDate;
 
     public Playlist() {
+        this.creatingDate = LocalDate.now();
     }
 
     public Playlist(String title, Song currentSong, List<Song> songs, LocalDate creatingDate) {
+        this.title = title;
+        this.currentSong = currentSong;
+        this.songs = songs;
+        this.creatingDate = creatingDate;
+    }
+
+    public Playlist(int id, String title, Song currentSong, List<Song> songs, LocalDate creatingDate) {
+        this.id = id;
         this.title = title;
         this.currentSong = currentSong;
         this.songs = songs;

@@ -8,7 +8,17 @@ public class Song {
     public Song() {
     }
 
+    public Song(String path) {
+        this.path = path;
+    }
+
     public Song(String path, Playlist playlist) {
+        this.path = path;
+        this.playlist = playlist;
+    }
+
+    public Song(int id, String path, Playlist playlist) {
+        this.id = id;
         this.path = path;
         this.playlist = playlist;
     }
