@@ -2,6 +2,8 @@ module com.romych.player.musicplayer {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.media;
+    requires java.xml;
+    requires java.sql;
 
 
     opens com.romych.player.musicplayer to javafx.fxml;
