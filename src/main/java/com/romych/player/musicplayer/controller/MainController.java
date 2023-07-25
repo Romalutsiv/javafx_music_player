@@ -1,8 +1,9 @@
 package com.romych.player.musicplayer.controller;
 
+import com.romych.player.musicplayer.service.PlaylistService;
+import com.romych.player.musicplayer.service.impl.PlaylistServiceImpl;
 import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
@@ -13,18 +14,15 @@ import javafx.stage.Stage;
 import javafx.scene.media.Media;
 
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
 
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributeView;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.io.IOException;
 import java.util.*;
 
-public class HelloController {
+public class MainController {
 
     @FXML
     private Button playBtn;
@@ -59,6 +57,8 @@ public class HelloController {
     private boolean running;
 
     private Label[] labels = new Label[3];
+
+    PlaylistService playlistService;
 
 
 
@@ -95,10 +95,13 @@ public class HelloController {
         mediaPlayer.pause();
     }
     @FXML
-    protected void openFileFromMenu(){
+    protected void openFileFromMenu() throws IOException, ParserConfigurationException, TransformerException {
+        playlistService = new PlaylistServiceImpl();
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters()
-                .addAll(new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
+
+                .addAll(new FileChooser.ExtensionFilter("Music Files", "*.mp3"),
+                        new FileChooser.ExtensionFilter("Wav files", "*.wav"));
         File selected = fileChooser.showOpenDialog(new Stage());
         if (running) {
             pause();

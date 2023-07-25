@@ -39,7 +39,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public List<Playlist> getAll() {
         List<Playlist> playlists = playlistDAO.findAll();
-        if (playlists.size() == 0) throw new RuntimeException("Empty!");
+//        if (playlists.size() == 0) throw new RuntimeException("Empty!");
         return playlists;
     }
 

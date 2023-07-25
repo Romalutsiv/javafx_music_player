@@ -1,3 +1,34 @@
-.button{
-    background-color: brown;
+/*@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,800);
+
+$background:#f9f9f9;
+$foreground:#2c3e50;
+
+$foreground-light:#34495e;
+
+$size:50px;
+$ratio:1.2;
+
+$transition-time:0.3s;*/
+
+
+#bottomAnchor{
+    -fx-background-color:  #FF6868;
+}
+
+#playlistAnchor{
+    -fx-background-color:  #f7c8c8;
+}
+.menu-bar{
+    -fx-background-color: #ffffff;
+}
+.menu .menu-item{
+    -fx-padding: 5 20 5 20;
+}
+.menu:hover, .menu:focus {
+    -fx-background-color:  #FF6868;
+}
+.menu-item:hover{
+
+
+    -fx-background-color: white;
 }

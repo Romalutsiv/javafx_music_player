@@ -16,6 +16,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
             "\t\"title\"\tTEXT NOT NULL,\n" +
             "\t\"current_song\"\tTEXT NOT NULL,\n" +
             "\t\"creating_date\"\tTEXT,\n" +
+            "\t\"active\"\tINTEGER NOT NULL,\n" +
             "\t\"id\"\tINTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
     private final String FIND_ALL_QUERY = "SELECT * FROM Playlist";
@@ -23,12 +24,15 @@ public class PlaylistDAOImpl implements PlaylistDAO {
     private final String FIND_BY_TITLE_QUERY = "SELECT * FROM Playlist WHERE title =?";
     private final String DELETE_PLAYLIST_QUERY = "DELETE FROM Playlist WHERE id =?";
     private final String SAVE_PLAYLIST_QUEERY = "INSERT INTO Playlist" +
-            "  (title, current_song, creating_date) VALUES " +
-            " (?, ?, ?);";
+            "  (title, current_song, creating_date, active) VALUES " +
+            " (?, ?, ?, ?);";
 
-    private final String UPDATE_PLAYLIST_QUERY = "UPDATE warehouses SET name = ? , "
-            + "capacity = ? "
+    private final String UPDATE_PLAYLIST_QUERY = "UPDATE Playlist SET "
+            + "title = ? , "
+            + "current_song = ?, "
+            + "active = ? "
             + "WHERE id = ?";
+
 
     private final SongDAO songDAO = new SongDAOImpl();
 
@@ -46,19 +50,18 @@ public class PlaylistDAOImpl implements PlaylistDAO {
         try(Connection connection = ConnectorSQLite.getConnection();
             Statement statement = connection.createStatement()){
             ResultSet rs = statement.executeQuery(FIND_ALL_QUERY);
-            while (rs.next()){
-                Playlist playlist = new Playlist();
+            while(rs.next()){
                 int id = rs.getInt("id");
-                playlist.setId(id);
                 String title = rs.getString("title");
+                String currentSong = rs.getString("current_song");
+                LocalDate creatingDate = LocalDate.parse(rs.getString("creating_date"));
+                Playlist playlist = new Playlist();
+                playlist.setId(id);
                 playlist.setTitle(title);
-                String currentSongPath = rs.getString("current_song");
-                Song currentSong = songDAO.findByPathAndPlaylistId(currentSongPath, playlist);
-                playlist.setCurrentSong(currentSong);
-                List<Song> playlistSongs = songDAO.findSongsFromPlaylist(playlist);
-                playlist.setSongs(playlistSongs);
-                LocalDate date = LocalDate.parse(rs.getString(""));
-                playlist.setCreatingDate(date);
+                playlist.setCreatingDate(creatingDate);
+                playlist.setCurrentSong(songDAO.findByPathAndPlaylistId(currentSong, playlist));
+                playlist.setSongs(songDAO.findSongsFromPlaylist(playlist));
+                playlist.setActive(rs.getInt("active"));
                 playlists.add(playlist);
             }
         } catch (SQLException e){
@@ -87,6 +90,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
                 playlist.setCurrentSong(currentSong);
                 playlist.setCreatingDate(date);
                 playlist.setSongs(playlistSongs);
+                playlist.setActive(rs.getInt("active"));
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -114,6 +118,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
                 playlist.setCurrentSong(currentSong);
                 playlist.setCreatingDate(date);
                 playlist.setSongs(playlistSongs);
+                playlist.setActive(rs.getInt("active"));
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -147,6 +152,7 @@ public class PlaylistDAOImpl implements PlaylistDAO {
             statement.setString(1, entity.getTitle());
             statement.setString(2, entity.getCurrentSong().getPath());
             statement.setString(3, entity.getCreatingDate().toString());
+            statement.setInt(4, entity.getActive());
             statement.executeUpdate();
             Playlist playlist = findByTitle(entity.getTitle());
             for (Song song :
@@ -171,6 +177,8 @@ public class PlaylistDAOImpl implements PlaylistDAO {
             PreparedStatement statement = connection.prepareStatement(UPDATE_PLAYLIST_QUERY)) {
             statement.setString(1, entity.getTitle());
             statement.setString(2, entity.getCurrentSong().getPath());
+            statement.setInt(3, entity.getActive());
+            statement.setInt(4, entity.getId());
             songDAO.delete(entity.getId());
             statement.executeUpdate();
             for (Song song :
